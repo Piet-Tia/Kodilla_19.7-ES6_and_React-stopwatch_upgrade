@@ -1,0 +1,24 @@
+{
+	"name": "19.6-es6_organization-stopwatch",
+	"version": "1.0.0",
+	"description": "",
+	"main": "script.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"watch": "browser-sync start --server --files *.css *.html *.js"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/Piet-Tia/Kodilla_19.6-ES6_organization-stopwatch.git"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/Piet-Tia/Kodilla_19.6-ES6_organization-stopwatch/issues"
+	},
+	"homepage": "https://github.com/Piet-Tia/Kodilla_19.6-ES6_organization-stopwatch#readme",
+	"devDependencies": {
+		"browser-sync": "^2.26.3"
+	}
+}
