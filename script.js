@@ -1,99 +1,151 @@
-
-
-class Stopwatch {
-	constructor(display) {
-		this.running = false;
-		this.display = display;
-		this.reset();
-		this.print(this.times);
+class Stopwatch extends React.Component {
+	constructor() {
+		super();
+		this.startTimer = this.startTimer.bind(this);
+		this.stopTimer = this.stopTimer.bind(this);
+		this.resetTimer = this.resetTimer.bind(this);
+		this.saveTime = this.saveTime.bind(this);
+		this.clearTimes = this.clearTimes.bind(this);
+		this.addTime = this.addTime.bind(this);
+		this.state = {
+			isRunning: false,
+			runningTime: {
+				minutes: 0,
+				seconds: 0,
+				miliseconds: 0
+			}
+		}
 	}
 
-	reset() {
-		this.times = {
-			minutes: 0,
-			seconds: 0,
-			miliseconds: 0
-		};
+	startTimer() {
+		if (!this.state.isRunning) {
+			this.setState({
+				isRunning: true
+			})
+			this.myTimer = setInterval(this.addTime, 10)
+		}
 	}
 
-	print() {
-		this.display.innerText = this.format(this.times);
+	stopTimer() {
+		clearInterval(this.myTimer);
+		this.setState({
+			isRunning: false
+		})
+	}
+
+	resetTimer() {
+		let runningTime = this.state.runningTime
+		Object.keys(runningTime).forEach(e => runningTime[e] = 0)
+		this.setState({
+			runningTime
+		});
+	}
+
+	saveTime() {
+		const node = document.createElement('li')
+		const textNode = document.createTextNode(`${this.format(this.state.runningTime)}`)
+		node.appendChild(textNode)
+		document.getElementById('stopwatch__results').appendChild(node)
+	}
+
+	clearTimes() {
+		document.getElementById('stopwatch__results').innerHTML = 'Saved times:'
+	}
+
+	addTime() {
+		this.setState(prevState => ({
+			runningTime: {
+				...prevState.runningTime,
+				miliseconds: this.state.runningTime.miliseconds + 1,
+			}
+		}))
+		if (this.state.runningTime.miliseconds >= 100) {
+			this.setState(prevState => ({
+				runningTime: {
+					...prevState.runningTime,
+					seconds: this.state.runningTime.seconds + 1,
+					miliseconds: this.state.runningTime.miliseconds - 100
+				}
+			}))
+		}
+		if (this.state.runningTime.seconds >= 60) {
+			this.setState(prevState => ({
+				runningTime: {
+					...prevState.runningTime,
+					minutes: this.state.runningTime.minutes + 1,
+					seconds: this.state.runningTime.seconds - 60
+				}
+			}))
+		}
 	}
 
 	format(times) {
-		return `${pad0(times.minutes)}:${pad0(times.seconds)}:${pad0(Math.floor(times.miliseconds))}`;
+		return `${this.pad0(times.minutes)}:${this.pad0(times.seconds)}:${this.pad0(times.miliseconds)}`;
 	}
 
-	start() {
-		if (!this.running) {
-			this.running = true;
-			this.watch = setInterval(() => this.step(), 10);
+	pad0(value) {
+		let result = value.toString();
+		if (result.length < 2) {
+			result = '0' + result;
 		}
+		return result;
 	}
 
-	step() {
-		if (!this.running) return;
-		this.calculate();
-		this.print();
+	render() {
+		return (
+			<div className='stopwatch__module'>
+				<nav className="stopwatch__controls">
+					<StartButton onClick={this.startTimer} /><br />
+					<StopButton onClick={this.stopTimer} /><br />
+					<ResetButton onClick={this.resetTimer} /><br />
+					<SaveTimeButton onClick={this.saveTime} /><br />
+					<ClearTimesButton onClick={this.clearTimes} /><br />
+				</nav>
+				<Timer formattedRunningTime={this.format(this.state.runningTime)} />
+				<ul id="stopwatch__results">Saved times:</ul>
+			</div>
+		)
 	}
-
-	calculate() {
-		this.times.miliseconds += 1;
-		if (this.times.miliseconds >= 100) {
-			this.times.seconds += 1;
-			this.times.miliseconds = 0;
-		}
-		if (this.times.seconds >= 60) {
-			this.times.minutes += 1;
-			this.times.seconds = 0;
-		}
-	}
-
-	stop() {
-		this.running = false;
-		clearInterval(this.watch);
-	}
-
-	stopResetPrint() {
-		this.stop();
-		this.reset();
-		this.clearTimes(savedTimes);
-		this.print();
-	}
-
-	saveTime(location) {
-		location.innerHTML += `<li> ${this.format(this.times)}</li>`;
-	}
-
-	clearTimes(location){
-		location.innerText = 'Saved times:';
-	}
-
 }
 
-function pad0(value) {
-	let result = value.toString();
-	if (result.length < 2) {
-		result = '0' + result;
+class Timer extends React.Component {
+
+	render() {
+		return <div className="stopwatch__timer">
+			{this.props.formattedRunningTime}
+		</div>
 	}
-	return result;
 }
 
-const stopwatch = new Stopwatch(
-	document.querySelector('.stopwatch'));
+class StartButton extends React.Component {
+	render() {
+		return <a href='#' className="stopwatch__button" id="start" onClick={this.props.onClick}>Start</a>
+	}
+}
 
-let startButton = document.getElementById('start');
-startButton.addEventListener('click', () => stopwatch.start());
+class StopButton extends React.Component {
+	render() {
+		return <a href='#' className="stopwatch__button" id="stop" onClick={this.props.onClick}>Stop</a>
+	}
+}
 
-let stopButton = document.getElementById('stop');
-stopButton.addEventListener('click', () => stopwatch.stop());
+class ResetButton extends React.Component {
+	render() {
+		return <a href='#' className="stopwatch__button" id="reset" onClick={this.props.onClick}>Reset</a>
+	}
+}
 
-let resetButton = document.getElementById('reset');
-resetButton.addEventListener('click', () => stopwatch.stopResetPrint());
+class SaveTimeButton extends React.Component {
+	render() {
+		return <a href='#' className="stopwatch__button" id="save_time" onClick={this.props.onClick}>Save current time</a>
+	}
+}
 
-let saveTimeButton = document.getElementById('save_time');
-let savedTimes = document.getElementById('results');
-saveTimeButton.addEventListener('click', () => stopwatch.saveTime(savedTimes));
+class ClearTimesButton extends React.Component {
+	render() {
+		return <a href='#' className="stopwatch__button" id="clear_times" onClick={this.props.onClick}>Clear saved times</a>
+	}
+}
 
-let clearSavedTimesButton = document.getElementById('clear_times');
-clearSavedTimesButton.addEventListener('click', () => stopwatch.clearTimes(savedTimes));
+const stopwatch = <Stopwatch />;
+ReactDOM.render(stopwatch, document.getElementById('app'));

@@ -3,20 +3,14 @@
 
 <head>
 	<meta charset="UTF-8" />
-	<title>Timer!</title>
+	<title>React ES6 Stopwatch</title>
 	<link rel="stylesheet" type="text/css" href="styles.css">
 </head>
 
 <body>
-	<nav class="controls">
-		<a href="#" class="button" id="start">Start</a><br>
-		<a href="#" class="button" id="stop">Stop</a><br>
-		<a href="#" class="button" id="reset">Reset</a><br>
-		<a href="#" class="button" id="save_time">Save current time</a><br>
-		<a href="#" class="button" id="clear_times">Clear saved times</a><br>
-	</nav>
-	<div class="stopwatch"></div>
-	<ul id="results">Saved times:</ul>
+	<div id="app"></div>
+	<script src="https://unpkg.com/react@15.3.2/dist/react.js"></script>
+	<script src="https://unpkg.com/react-dom@15.3.2/dist/react-dom.js"></script>
 	<script src="https://unpkg.com/babel-core@5.8.38/browser.min.js"></script>
 	<script type="text/babel" src="script.js"></script> <!-- Compiled or not compiled, that is the question... -->
 </body>
