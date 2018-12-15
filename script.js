@@ -57,7 +57,11 @@ class Stopwatch extends React.Component {
 	}
 
 	saveTime() {
-		const timeData = [...this.state.savedTimes, this.format(this.state.runningTime)];
+		const currentTimeData = {
+			time: this.format(this.state.runningTime),
+			id: this.state.savedTimes.length + 1
+		};
+		const timeData = [...this.state.savedTimes , currentTimeData]
 		this.setState({
 			savedTimes: timeData
 		})
@@ -109,7 +113,6 @@ class Stopwatch extends React.Component {
 	}
 
 	render() {
-		console.log(this.state);
 		return (
 			<div className='stopwatch__module'>
 				<nav className="stopwatch__controls">
@@ -127,34 +130,7 @@ class Stopwatch extends React.Component {
 	}
 }
 
-class Timer extends React.Component {
 
-	render() {
-		return <div className="stopwatch__timer">
-			{this.props.formattedRunningTime}
-		</div>
-	}
-}
-
-class SavedTimesList extends React.Component {
-	render() {
-		const singleTimes = this.props.savedTimes.map((time) =>
-			<li>{time}</li>)
-		return (
-			<ul>
-			{singleTimes}
-			</ul>
-		)
-	}
-}
-
-class SingleTime extends React.Component {
-	render() {
-		return (
-			<li> </li>
-		)
-	}
-}
 
 class StartButton extends React.Component {
 	render() {
@@ -185,6 +161,34 @@ class ClearTimesButton extends React.Component {
 		return <a href='#' className="stopwatch__button" id="clear_times" onClick={this.props.onClick}>Clear saved times</a>
 	}
 }
+
+class Timer extends React.Component {
+	render() {
+		return <div className="stopwatch__timer">
+			{this.props.formattedRunningTime}
+		</div>
+	}
+}
+
+class SavedTimesList extends React.Component {
+	render() {
+		const singleTimes = this.props.savedTimes.map(singleSavedTime);
+		return (
+			<ul>
+			{singleTimes}
+			</ul>
+		)
+	}
+}
+
+const singleSavedTime = (singleTime) => <SingleTime time={singleTime.time} key={singleTime.id} />
+
+class SingleTime extends React.Component {
+	render() {
+		return <li>{this.props.time}</li>
+	}
+}
+
 
 const stopwatch = <Stopwatch />;
 ReactDOM.render(stopwatch, document.getElementById('app'));
