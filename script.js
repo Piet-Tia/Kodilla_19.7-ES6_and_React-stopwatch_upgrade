@@ -13,9 +13,11 @@ class Stopwatch extends React.Component {
 				minutes: 0,
 				seconds: 0,
 				miliseconds: 0
-			}
+			},
+			savedTimes: []
 		}
 	}
+
 
 	startTimer() {
 		if (!this.state.isRunning) {
@@ -25,6 +27,19 @@ class Stopwatch extends React.Component {
 			this.myTimer = setInterval(this.addTime, 10)
 		}
 	}
+
+	/*
+		startTimer = () => {
+			if (!this.state.isRunning) {
+				this.setState({
+					isRunning: true
+				})
+				this.myTimer = setInterval(this.addTime, 10)
+			}
+		}
+	mamy tu property startTimer zamiast metody, niepotrzebny też będzie "bind" - no i uruchomienie stage 2 w Babelu !!
+		*/
+
 
 	stopTimer() {
 		clearInterval(this.myTimer);
@@ -42,14 +57,16 @@ class Stopwatch extends React.Component {
 	}
 
 	saveTime() {
-		const node = document.createElement('li')
-		const textNode = document.createTextNode(`${this.format(this.state.runningTime)}`)
-		node.appendChild(textNode)
-		document.getElementById('stopwatch__results').appendChild(node)
+		const timeData = [...this.state.savedTimes, this.format(this.state.runningTime)];
+		this.setState({
+			savedTimes: timeData
+		})
 	}
 
 	clearTimes() {
-		document.getElementById('stopwatch__results').innerHTML = 'Saved times:'
+		this.setState({
+			savedTimes: []
+		})
 	}
 
 	addTime() {
@@ -92,6 +109,7 @@ class Stopwatch extends React.Component {
 	}
 
 	render() {
+		console.log(this.state);
 		return (
 			<div className='stopwatch__module'>
 				<nav className="stopwatch__controls">
@@ -102,7 +120,8 @@ class Stopwatch extends React.Component {
 					<ClearTimesButton onClick={this.clearTimes} /><br />
 				</nav>
 				<Timer formattedRunningTime={this.format(this.state.runningTime)} />
-				<ul id="stopwatch__results">Saved times:</ul>
+				<SavedTimesList savedTimes={this.state.savedTimes} />
+				
 			</div>
 		)
 	}
@@ -114,6 +133,26 @@ class Timer extends React.Component {
 		return <div className="stopwatch__timer">
 			{this.props.formattedRunningTime}
 		</div>
+	}
+}
+
+class SavedTimesList extends React.Component {
+	render() {
+		const singleTimes = this.props.savedTimes.map((time) =>
+			<li>{time}</li>)
+		return (
+			<ul>
+			{singleTimes}
+			</ul>
+		)
+	}
+}
+
+class SingleTime extends React.Component {
+	render() {
+		return (
+			<li> </li>
+		)
 	}
 }
 
