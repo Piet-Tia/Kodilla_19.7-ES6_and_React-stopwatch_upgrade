@@ -61,7 +61,7 @@ class Stopwatch extends React.Component {
 			time: this.format(this.state.runningTime),
 			id: this.state.savedTimes.length + 1
 		};
-		const timeData = [...this.state.savedTimes , currentTimeData]
+		const timeData = [...this.state.savedTimes, currentTimeData]
 		this.setState({
 			savedTimes: timeData
 		})
@@ -124,7 +124,7 @@ class Stopwatch extends React.Component {
 				</nav>
 				<Timer formattedRunningTime={this.format(this.state.runningTime)} />
 				<SavedTimesList savedTimes={this.state.savedTimes} />
-				
+
 			</div>
 		)
 	}
@@ -174,12 +174,12 @@ class SavedTimesList extends React.Component {
 	render() {
 		const singleTimes = this.props.savedTimes.map((singleSavedTime) =>
 			<li key={singleSavedTime.id}>
-			{singleSavedTime.time}
+				{singleSavedTime.time}
 			</li>
-			);
+		);
 		return (
 			<ul>
-			{singleTimes}
+				{singleTimes}
 			</ul>
 		)
 	}
