@@ -73,32 +73,52 @@ class Stopwatch extends React.Component {
 		})
 	}
 
+	// SET STATE UŻYWAĆ DOPIERO, JAK MAM JUŻ GOTOWY OBIEKT DO WSTAWIENIA
+
 	addTime() {
-		this.setState(prevState => ({
-			runningTime: {
-				...prevState.runningTime,
-				miliseconds: this.state.runningTime.miliseconds + 1,
-			}
-		}))
-		if (this.state.runningTime.miliseconds >= 100) {
-			this.setState(prevState => ({
-				runningTime: {
-					...prevState.runningTime,
-					seconds: this.state.runningTime.seconds + 1,
-					miliseconds: this.state.runningTime.miliseconds - 100
-				}
-			}))
+		let currentRunningTime = this.state.runningTime;
+		currentRunningTime.miliseconds++;
+		if (currentRunningTime.miliseconds >= 100) {
+			currentRunningTime.seconds++ ,
+			currentRunningTime.miliseconds -= 100
 		}
-		if (this.state.runningTime.seconds >= 60) {
-			this.setState(prevState => ({
-				runningTime: {
-					...prevState.runningTime,
-					minutes: this.state.runningTime.minutes + 1,
-					seconds: this.state.runningTime.seconds - 60
-				}
-			}))
+		if (currentRunningTime.seconds >= 60) {
+			currentRunningTime.minutes++ ,
+			currentRunningTime.seconds -= 60
 		}
+	this.setState({
+		runningTime: currentRunningTime
+	})
+
+		/*
+				this.setState(prevState => ({
+					runningTime: {
+						...prevState.runningTime,
+						miliseconds: this.state.runningTime.miliseconds + 1,
+					}
+				}))
+				if (this.state.runningTime.miliseconds >= 100) {
+					this.setState(prevState => ({
+						runningTime: {
+							...prevState.runningTime,
+							seconds: this.state.runningTime.seconds + 1,
+							miliseconds: this.state.runningTime.miliseconds - 100
+						}
+					}))
+				}
+				if (this.state.runningTime.seconds >= 60) {
+					this.setState(prevState => ({
+						runningTime: {
+							...prevState.runningTime,
+							minutes: this.state.runningTime.minutes + 1,
+							seconds: this.state.runningTime.seconds - 60
+						}
+					}))
+				}
+		*/
 	}
+
+	// FORMAT I PAD0 MOZNA WYRZUCIC JAKO ZEWNĘTRZNA FUNKCJA
 
 	format(times) {
 		return `${this.pad0(times.minutes)}:${this.pad0(times.seconds)}:${this.pad0(times.miliseconds)}`;
