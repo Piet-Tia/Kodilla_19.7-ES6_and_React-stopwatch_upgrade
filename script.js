@@ -77,7 +77,7 @@ class Stopwatch extends React.Component {
 	// SET STATE UŻYWAĆ DOPIERO, JAK MAM JUŻ GOTOWY OBIEKT DO WSTAWIENIA
 
 	timeIsRunning() {
-		let currentRunningTime = this.state.runningTime;
+		const currentRunningTime = {...this.state.runningTime};
 		currentRunningTime.miliseconds++;
 		if (currentRunningTime.miliseconds >= 100) {
 			currentRunningTime.seconds++ ,
