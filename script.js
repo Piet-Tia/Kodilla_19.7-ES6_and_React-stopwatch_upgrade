@@ -1,3 +1,4 @@
+
 class Stopwatch extends React.Component {
 	constructor() {
 		super();
@@ -6,7 +7,7 @@ class Stopwatch extends React.Component {
 		this.resetTimer = this.resetTimer.bind(this);
 		this.saveTime = this.saveTime.bind(this);
 		this.clearTimes = this.clearTimes.bind(this);
-		this.addTime = this.addTime.bind(this);
+		this.timeIsRunning = this.timeIsRunning.bind(this);
 		this.state = {
 			isRunning: false,
 			runningTime: {
@@ -24,7 +25,7 @@ class Stopwatch extends React.Component {
 			this.setState({
 				isRunning: true
 			})
-			this.myTimer = setInterval(this.addTime, 10)
+			this.myTimer = setInterval(this.timeIsRunning, 10)
 		}
 	}
 
@@ -34,7 +35,7 @@ class Stopwatch extends React.Component {
 				this.setState({
 					isRunning: true
 				})
-				this.myTimer = setInterval(this.addTime, 10)
+				this.myTimer = setInterval(this.timeIsRunning, 10)
 			}
 		}
 	mamy tu property startTimer zamiast metody, niepotrzebny też będzie "bind" - no i uruchomienie stage 2 w Babelu !!
@@ -58,7 +59,7 @@ class Stopwatch extends React.Component {
 
 	saveTime() {
 		const currentTimeData = {
-			time: this.format(this.state.runningTime),
+			time: format(this.state.runningTime),
 			id: this.state.savedTimes.length + 1
 		};
 		const timeData = [...this.state.savedTimes, currentTimeData]
@@ -75,7 +76,7 @@ class Stopwatch extends React.Component {
 
 	// SET STATE UŻYWAĆ DOPIERO, JAK MAM JUŻ GOTOWY OBIEKT DO WSTAWIENIA
 
-	addTime() {
+	timeIsRunning() {
 		let currentRunningTime = this.state.runningTime;
 		currentRunningTime.miliseconds++;
 		if (currentRunningTime.miliseconds >= 100) {
@@ -86,50 +87,9 @@ class Stopwatch extends React.Component {
 			currentRunningTime.minutes++ ,
 			currentRunningTime.seconds -= 60
 		}
-	this.setState({
-		runningTime: currentRunningTime
-	})
-
-		/*
-				this.setState(prevState => ({
-					runningTime: {
-						...prevState.runningTime,
-						miliseconds: this.state.runningTime.miliseconds + 1,
-					}
-				}))
-				if (this.state.runningTime.miliseconds >= 100) {
-					this.setState(prevState => ({
-						runningTime: {
-							...prevState.runningTime,
-							seconds: this.state.runningTime.seconds + 1,
-							miliseconds: this.state.runningTime.miliseconds - 100
-						}
-					}))
-				}
-				if (this.state.runningTime.seconds >= 60) {
-					this.setState(prevState => ({
-						runningTime: {
-							...prevState.runningTime,
-							minutes: this.state.runningTime.minutes + 1,
-							seconds: this.state.runningTime.seconds - 60
-						}
-					}))
-				}
-		*/
-	}
-
-	// FORMAT I PAD0 MOZNA WYRZUCIC JAKO ZEWNĘTRZNA FUNKCJA
-
-	format(times) {
-		return `${this.pad0(times.minutes)}:${this.pad0(times.seconds)}:${this.pad0(times.miliseconds)}`;
-	}
-
-	pad0(value) {
-		let result = value.toString();
-		if (result.length < 2) {
-			result = '0' + result;
-		}
-		return result;
+		this.setState({
+			runningTime: currentRunningTime
+		})
 	}
 
 	render() {
@@ -142,7 +102,7 @@ class Stopwatch extends React.Component {
 					<SaveTimeButton onClick={this.saveTime} /><br />
 					<ClearTimesButton onClick={this.clearTimes} /><br />
 				</nav>
-				<Timer formattedRunningTime={this.format(this.state.runningTime)} />
+				<Timer formattedRunningTime={format(this.state.runningTime)} />
 				<SavedTimesList savedTimes={this.state.savedTimes} />
 
 			</div>
@@ -204,6 +164,20 @@ class SavedTimesList extends React.Component {
 		)
 	}
 }
+
+function format(times) {
+	return `${pad0(times.minutes)}:${pad0(times.seconds)}:${pad0(times.miliseconds)}`;
+};
+
+function pad0(value) {
+	let result = value.toString();
+	if (result.length < 2) {
+		result = '0' + result;
+	}
+	return result;
+};
+
+
 
 const stopwatch = <Stopwatch />;
 ReactDOM.render(stopwatch, document.getElementById('app'));
