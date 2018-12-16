@@ -172,7 +172,11 @@ class Timer extends React.Component {
 
 class SavedTimesList extends React.Component {
 	render() {
-		const singleTimes = this.props.savedTimes.map(singleSavedTime);
+		const singleTimes = this.props.savedTimes.map((singleSavedTime) =>
+			<li key={singleSavedTime.id}>
+			{singleSavedTime.time}
+			</li>
+			);
 		return (
 			<ul>
 			{singleTimes}
@@ -180,15 +184,6 @@ class SavedTimesList extends React.Component {
 		)
 	}
 }
-
-const singleSavedTime = (singleTime) => <SingleTime time={singleTime.time} key={singleTime.id} />
-
-class SingleTime extends React.Component {
-	render() {
-		return <li>{this.props.time}</li>
-	}
-}
-
 
 const stopwatch = <Stopwatch />;
 ReactDOM.render(stopwatch, document.getElementById('app'));
